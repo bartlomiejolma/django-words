@@ -13,8 +13,3 @@ def index(request):
 def detail(request, word_id):
     word = get_object_or_404(Word, pk=word_id)
     return render(request, "words/detail.html", {"word": word})
-
-
-def definitions(request, word_id):
-    response = f"You're looking at the definitions of {word_id}."
-    return HttpResponse(response)
