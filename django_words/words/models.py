@@ -1,4 +1,5 @@
 import datetime
+import random
 
 from django.db import models
 from django.utils import timezone
@@ -13,6 +14,12 @@ class Word(models.Model):
 
     def was_added_recently(self):
         return self.added_date >= timezone.now() - datetime.timedelta(days=1)
+
+    @classmethod
+    def random(cls):
+        count = cls.objects.count()
+        random_index = random.randint(1, count)
+        return cls.objects.get(pk=random_index)
 
 
 class Definition(models.Model):
