@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import Word
 
@@ -7,15 +7,12 @@ from .models import Word
 def index(request):
     latest_word_list = Word.objects.order_by("-added_date")[:5]
     context = {"latest_word_list": latest_word_list}
-    return render(request, 'words/index.html', context)
+    return render(request, "words/index.html", context)
 
 
 def detail(request, word_id):
-    try:
-        word = Word.objects.get(pk=word_id)
-    except Word.DoesNotExist:
-        raise Http404("Word does not exist")
-    return render(request, 'words/detail.html', {'word': word})
+    word = get_object_or_404(Word, pk=word_id)
+    return render(request, "words/detail.html", {"word": word})
 
 
 def definitions(request, word_id):
