@@ -8,7 +8,7 @@
     {% if latest_word_list %}
     <ul>
       {% for word in latest_word_list %}
-      <li><a href="{% url 'detail' word.id %}">{{ word.word_text }}</a></li>
+      <li><a href="{% url 'words:detail' word.id %}">{{ word.word_text }}</a></li>
       {% endfor %}
     </ul>
     {% else %}
