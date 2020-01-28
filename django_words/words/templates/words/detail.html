@@ -2,9 +2,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>word.word_text</title>
+    <title>{{ word.word_text }}</title>
   </head>
   <body>
-    {{ word }}
+    <h1>{{ word.word_text }}</h1>
+    <ol>
+      {% for definition in word.definition_set.all %}
+      <li>{{ definition.definition_text }}</li>
+      {% endfor %}
+    </ol>
   </body>
 </html>
