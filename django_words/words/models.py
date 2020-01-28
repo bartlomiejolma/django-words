@@ -22,6 +22,8 @@ class Definition(models.Model):
     def __str__(self):
         return self.definition_text
 
-    # class PartOfSpeech(models.TextChoices):
-    #     VERB = 'v.';_('verb')
-    # world_part_of_speech = models
+
+class Exercise(models.Model):
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
+    correct_answer = models.BooleanField()
+    exercised_date = models.DateTimeField("exercised date")
