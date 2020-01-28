@@ -1,14 +1,13 @@
 from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render
 
 from .models import Word
 
 
 def index(request):
     latest_word_list = Word.objects.order_by("-added_date")[:5]
-    template = loader.get_template("words/index.html")
     context = {"latest_word_list": latest_word_list}
-    return HttpResponse(template.render(context, request))
+    return render(request, 'words/index.html', context)
 
 
 def detail(request, word_id):
