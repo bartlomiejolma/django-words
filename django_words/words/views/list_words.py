@@ -1,7 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 
-from .models import Word
+from ..models import Word
 
 
 def index(request):

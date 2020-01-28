@@ -1,10 +1,10 @@
 from django.urls import path
 
-from . import views
+from .views import list_words
 
 app_name = "words"
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("<int:word_id>/", views.detail, name="detail"),
-    path("<int:word_id>/definitions/", views.definitions, name="definition"),
+    path("list", list_words.index, name="index"),
+    path("list/<int:word_id>/", list_words.detail, name="detail"),
+    path("list/<int:word_id>/definitions/", list_words.definitions, name="definition"),
 ]
