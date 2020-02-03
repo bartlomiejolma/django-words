@@ -26,8 +26,8 @@ class Word(models.Model):
 class Definition(models.Model):
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     definition_text = models.CharField(max_length=500)
-    example = models.CharField(max_length=500, default="")
-    phonetic = models.CharField(max_length=500, default="")
+    example = models.CharField(max_length=500, default="", null=True)
+    phonetic = models.CharField(max_length=500, default="", null=True)
 
     def __str__(self):
         return self.definition_text
