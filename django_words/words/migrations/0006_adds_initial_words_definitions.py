@@ -8,28 +8,35 @@ from django.utils import timezone
 from ..utils import oxford_dict
 
 
+def add_definition_to_word(definition_data: dict, word):
+    if definition_data["definitions"]:
+        word.definition_set.create(
+            definition_text=definition_data["definitions"],
+            example=definition_data["examples"],
+            phonetic=definition_data["phoneticSpelling"],
+        )
+
+
+def add_word_to_database(word_data: list, Word):
+    for (word_dict, definitions) in word_data:
+        word = Word(
+            word_text=word_dict["word"],
+            added_date=timezone.now(),
+            word_class=word_dict["type"],
+        )
+        with transaction.atomic():
+            word.save()
+
+            for definition_data in definitions:
+                add_definition_to_word(definition_data, word)
+
+
 def add_words(apps, schema_editor):
     WORDS_FILE = os.path.join("words", "migrations", "files", "english_words.txt")
     words_data = oxford_dict.get_data_from_file(WORDS_FILE)
-    print(words_data)
     Word = apps.get_model("words", "Word")
     for word_data in words_data:
-        for (word_dict, definitions) in word_data:
-            word = Word(
-                word_text=word_dict["word"],
-                added_date=timezone.now(),
-                word_class=word_dict["type"],
-            )
-            with transaction.atomic():
-                word.save()
-                for definition_data in definitions:
-                    print(definition_data)
-                    if definition_data["definitions"]:
-                        word.definition_set.create(
-                            definition_text=definition_data["definitions"],
-                            example=definition_data["examples"],
-                            phonetic=definition_data["phoneticSpelling"],
-                        )
+        add_word_to_database(word_data, Word)
 
 
 class Migration(migrations.Migration):
