@@ -1,7 +1,9 @@
 import random
 
-from django.http import Http404
+from django.utils import timezone
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
 from ..models import Exercise, Word, Definition
 
@@ -30,7 +32,42 @@ def get_definitions_for_exercise(selected_word: Word, no_definitions: int = 4) -
 
 def index(request):
     selected_word = Word.random()
+    exercise = Exercise(
+        word=selected_word, exercised_date=timezone.now(), correct_answer=False
+    )
+    exercise.save()
     definitions = get_definitions_for_exercise(selected_word)
-    print(definitions)
-    context = {"selected_word": selected_word, "definitions": definitions}
+    context = {
+        "selected_word": selected_word,
+        "definitions": definitions,
+        "exercise": exercise,
+    }
     return render(request, "exercises/index.html", context)
+
+
+def result(request, exercise_id):
+    exercise = get_object_or_404(Exercise, pk=exercise_id)
+    context = {"word": exercise.word}
+    if exercise.correct_answer:
+        context["message"] = "Correct answer"
+    else:
+        context["message"] = "You didn't select a correct answer"
+    return render(request, "exercises/result.html", context)
+
+
+def verify(request, exercise_id):
+    exercise: Exercise = get_object_or_404(Exercise, pk=exercise_id)
+    try:
+        _ = exercise.word.definition_set.get(pk=request.POST["definition"])
+    except (KeyError, Definition.DoesNotExist):
+        print(request)
+        exercise.correct_answer = False
+    else:
+        exercise.correct_answer = True
+    finally:
+        print(exercise)
+        exercise.save()
+        return HttpResponseRedirect(
+            reverse("words:exercises_results", kwargs={"exercise_id": exercise_id},)
+        )
+
