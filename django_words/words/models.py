@@ -22,7 +22,11 @@ class Word(RandomSelectable):
     word_class = models.CharField(max_length=200, default="")
 
     def __str__(self):
-        return self.word_text
+        phonetic: str = self.definition_set.all()[0].phonetic
+        if phonetic:
+            return f"{self.word_text} /{phonetic}/"
+        else:
+            return self.word_text
 
     def was_added_recently(self):
         return self.added_date >= timezone.now() - datetime.timedelta(days=1)
