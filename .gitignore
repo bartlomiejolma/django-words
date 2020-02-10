@@ -179,4 +179,4 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/django,python,visualstudiocode
 
-.env
+.venv
