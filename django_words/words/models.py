@@ -22,7 +22,7 @@ class Word(RandomSelectable):
     word_class = models.CharField(max_length=200, default="")
 
     def __str__(self):
-        phonetic: str = self.definition_set.all()[0].phonetic
+        phonetic: str = next(iter(self.definition_set.all()), {}).phonetic
         if phonetic:
             return f"{self.word_text} /{phonetic}/"
         else:
