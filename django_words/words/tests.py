@@ -15,4 +15,4 @@ class WordModelTests(TestCase):
         """
         time = timezone.now() + datetime.timedelta(days=30)
         future_word = Word(added_date=time)
-        self.assertIs(future_word.was_added_recently, False)
+        self.assertIs(future_word.was_added_recently(), False)

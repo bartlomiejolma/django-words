@@ -29,7 +29,8 @@ class Word(RandomSelectable):
             return self.word_text
 
     def was_added_recently(self):
-        return self.added_date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.added_date <= now
 
 
 class Definition(RandomSelectable):
