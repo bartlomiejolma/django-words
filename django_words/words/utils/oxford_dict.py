@@ -3,9 +3,7 @@ import time
 import requests
 import json
 
-APP_ID = ""
-APP_KEY = ""
-
+from .settings_oxford_dict import APP_ID, APP_KEY
 
 def request_word(word_id: str):
 
@@ -56,13 +54,21 @@ def request_data_about_line(valid_word_line):
     return extract_relevant_data(r)
 
 
+def get_data_for_words(word_lines):
+    valid_word_lines = [
+        word_line for word_line in word_lines if next(iter(word_line), "").isalnum()
+    ]
+    return [
+        request_data_about_line(valid_word_line) for valid_word_line in valid_word_lines
+    ]
+
+
 def get_data_from_file(words_file_path):
     with open(words_file_path, "r", encoding="utf-8") as words_file:
-        word_lines = words_file.readlines()
-        valid_word_lines = [
-            word_line for word_line in word_lines if word_line[0].isalnum()
-        ]
-        return [
-            request_data_about_line(valid_word_line)
-            for valid_word_line in valid_word_lines
-        ]
+        get_data_from_file_stream(words_file)
+
+
+def get_data_from_file_stream(words_file):
+    word_lines = words_file.readlines()
+    return get_data_for_words(word_lines)
+
